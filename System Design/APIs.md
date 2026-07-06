@@ -15,6 +15,7 @@
 - **SOAP**: XML-based, complex but reliable for enterprise systems
 - **Message Queues**: Asynchronous communication (RabbitMQ, Kafka)
 
+![](../images/System%20Design/APIs/Protocols.jpeg)
 
 ### REST API
 `````
@@ -71,7 +72,8 @@ service UserService {
 
 ### Server Sent Events (SSE)
 - Unidirectional real-time updates from server to client
-- Uses HTTP connection, keeps it open for streaming, when connections are severed, SSE will automatically reconnect.
+- It's like long polling, but instead of making an HTTP request again and again after every new piece of data, the server keeps the connection open and sends updates as they happen.
+- Keeps HTTP connection open for streaming, when connections are severed, SSE will automatically reconnect.
 - Simpler than WebSockets for certain use cases (e.g., live scores, notifications)
 
 #### Step 1: Client initiates connection
