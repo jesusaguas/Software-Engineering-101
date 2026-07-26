@@ -44,7 +44,7 @@ Each collaborator has a distinct responsibility. `CheckoutService` retains one c
 
 ## 2. Open/Closed Principle (OCP)
 
-> Software should be open for extension and closed for modification.
+> Software should be **Open for extension** and **Closed for modification**.
 
 New behavior should usually be added through a new implementation rather than by repeatedly editing stable code.
 
