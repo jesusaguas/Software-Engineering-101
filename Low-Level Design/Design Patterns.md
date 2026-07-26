@@ -48,6 +48,12 @@ class FareCalculator {
     return this.pricing.priceFor(ride);
   }
 }
+
+const standardFare = new FareCalculator(new StandardPricing());
+const surgeFare = new FareCalculator(new SurgePricing());
+
+standardFare.calculate(ride); // Uses standard pricing
+surgeFare.calculate(ride); // Uses surge pricing
 ```
 
 Use it when business rules vary independently: pricing, routing, ranking, validation, payment, or retry policies. It replaces growing conditionals with composable behavior.
