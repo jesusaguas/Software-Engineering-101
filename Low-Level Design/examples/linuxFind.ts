@@ -40,7 +40,7 @@
 // =============================================================================
 
 /**
- * FileSystemEntry
+ * FileSystemNode
  *   Shared identity for files and directories.
  *
  * FileEntry
@@ -56,7 +56,7 @@
  *   Orchestrates traversal and delegates matching to FileFilter.
  *
  * Relationships:
- * - DirectoryEntry contains many FileSystemEntries (Composite structure).
+ * - DirectoryEntry contains many FileSystemNodes (Composite structure).
  * - FindService traverses DirectoryEntries.
  * - FindService uses a FileFilter but does not know its concrete type.
  * - AndFilter and OrFilter compose other FileFilters.
@@ -102,7 +102,7 @@
 // 4. IMPLEMENT THE CORE FLOW
 // =============================================================================
 
-abstract class FileSystemEntry {
+abstract class FileSystemNode {
   constructor(readonly name: string) {
     if (name.trim().length === 0 || name.includes("/")) {
       throw new Error(`Invalid entry name: "${name}"`);
@@ -110,7 +110,7 @@ abstract class FileSystemEntry {
   }
 }
 
-class FileEntry extends FileSystemEntry {
+class FileEntry extends FileSystemNode {
   constructor(
     name: string,
     readonly sizeInBytes: number,
@@ -124,10 +124,10 @@ class FileEntry extends FileSystemEntry {
   }
 }
 
-class DirectoryEntry extends FileSystemEntry {
-  private readonly children: FileSystemEntry[] = [];
+class DirectoryEntry extends FileSystemNode {
+  private readonly children: FileSystemNode[] = [];
 
-  add(entry: FileSystemEntry): void {
+  add(entry: FileSystemNode): void {
     if (this.children.some(child => child.name === entry.name)) {
       throw new Error(
         `Entry "${entry.name}" already exists in directory "${this.name}"`,
@@ -137,7 +137,7 @@ class DirectoryEntry extends FileSystemEntry {
     this.children.push(entry);
   }
 
-  getChildren(): readonly FileSystemEntry[] {
+  getChildren(): readonly FileSystemNode[] {
     return [...this.children];
   }
 }
