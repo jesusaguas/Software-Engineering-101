@@ -1,4 +1,52 @@
-# SOLID Principles for LLD/OOD Interviews
+# Design Principles for LLD/OOD Interviews
+
+Design principles help you choose the simplest design that remains understandable and changeable. Apply them to concrete decisions; interviewers care more about your reasoning and trade-offs than whether you name every principle.  
+
+## 1. General Software Design Principles
+
+| Principle | Core idea | Interview reminder |
+|---|---|---|
+| **KISS** | Prefer the simplest solution that satisfies the requirements | Do not force a pattern when a class or conditional is enough |
+| **DRY** | Keep each piece of knowledge in one authoritative place | Deduplicate concepts, not merely similar-looking code |
+| **YAGNI** | Do not build hypothetical requirements | Explain future extensions without implementing them early |
+| **Separation of Concerns** | Isolate responsibilities that change independently | Keep UI, business rules, and persistence separate |
+| **Law of Demeter** | Depend only on immediate collaborators | Avoid reaching through an object’s internal structure |
+
+### KISS — Keep It Simple
+
+Start with the most direct correct design. Add factories, strategies, or extra classes only when variation or complexity justifies them. In interviews, unnecessary abstractions consume time and make the core workflow harder to follow.
+
+### DRY — Don’t Repeat Yourself
+
+Extract logic when it represents the same rule in multiple places, so a change has one source of truth. Do not merge code that only looks similar but serves different purposes; premature deduplication creates coupling and can conflict with KISS.
+
+### YAGNI — You Aren’t Gonna Need It
+
+Implement the confirmed requirements, not guessed features. Keep natural extension points in mind, but wait until a follow-up introduces the variation before building it.
+
+### Separation of Concerns
+
+Keep unrelated responsibilities in different components—for example, game rules in `Board`, rendering in `Display`, and user input in `InputHandler`. This lets each concern change and be tested independently. It applies across modules and layers, while SRP focuses more specifically on a module or class’s reason to change.
+
+### Law of Demeter
+
+An object should collaborate with its direct dependencies rather than navigate through a chain of internal objects:
+
+```ts
+// Avoid: depends on Customer -> Address -> zipCode structure.
+order.getCustomer().getAddress().getZipCode();
+
+// Prefer: Order hides that navigation behind an intention-revealing API.
+order.getCustomerZipCode();
+```
+
+Fluent calls such as `builder.setName("Ana").setAge(30).build()` are fine when the chain is one object’s public API. The problem is exposing and coupling callers to several objects’ internal structure.
+
+KISS and YAGNI protect against overusing DRY or SOLID. When principles pull in different directions, state the trade-off and choose the design best supported by the current requirements.
+
+---
+
+## 2. SOLID Principles for LLD/OOD Interviews
 
 SOLID is a set of design principles for making object-oriented code easier to read, change/extend, test. In an interview, use them to justify design decisions—not as rules that force every class to be tiny or every dependency to have an interface.
 
@@ -12,7 +60,7 @@ SOLID is a set of design principles for making object-oriented code easier to re
 
 ---
 
-## 1. Single Responsibility Principle (SRP)
+### 2.1 Single Responsibility Principle (SRP)
 
 > A module/class should have one reason to change.
 
@@ -42,7 +90,7 @@ Each collaborator has a distinct responsibility. `CheckoutService` retains one c
 
 ---
 
-## 2. Open/Closed Principle (OCP)
+### 2.2 Open/Closed Principle (OCP)
 
 > Software should be **Open for extension** and **Closed for modification**.
 
@@ -78,7 +126,7 @@ A new discount is a new `DiscountPolicy`; the calculator stays unchanged.
 
 ---
 
-## 3. Liskov Substitution Principle (LSP)
+### 2.3 Liskov Substitution Principle (LSP)
 
 > Any implementation of a contract must be safely usable wherever that contract is expected.
 > Subclasses should be substitutable for their base classes without breaking the application.
@@ -110,7 +158,7 @@ An implementation that throws `UnsupportedOperationError` for a valid positive a
 
 ---
 
-## 4. Interface Segregation Principle (ISP)
+### 2.4 Interface Segregation Principle (ISP)
 
 > Clients should not depend on methods they do not need.
 
@@ -136,7 +184,7 @@ The query service does not depend on `save`, `delete`, or administrative operati
 
 ---
 
-## 5. Dependency Inversion Principle (DIP)
+### 2.5 Dependency Inversion Principle (DIP)
 
 > High-level business policy should not depend directly on low-level infrastructure. Both should depend on abstractions owned around the business need.
 > Depend on abstractions (interfaces), not concretions (specific classes).
@@ -185,7 +233,7 @@ const service = new CheckoutService(
 
 ---
 
-## Applying SOLID in an Interview
+### Applying SOLID in an Interview
 
 1. Start from requirements and identify likely changes: payment providers, notification channels, pricing rules, persistence.
 2. Model core entities and behavioral contracts.
